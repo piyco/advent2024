@@ -1,29 +1,25 @@
-use std::collections::BinaryHeap;
-use std::io::{BufRead, BufReader};
-use std::fs::File;
+use std::fs;
 
 fn main() {
-    let mut heap1: BinaryHeap<i32> = BinaryHeap::new();
-    let mut heap2: BinaryHeap<i32> = BinaryHeap::new();
+    let mut vec1: Vec<i32> = Vec::new();
+    let mut vec2: Vec<i32> = Vec::new();
 
-    let reader = BufReader::new(File::open("./data/input.txt").expect("Cannot open file.txt"));
+    let input = fs::read_to_string("./data/input.txt").unwrap();
 
-    for line in reader.lines() {
-
-        let mut flag = true;
-        for word in line.unwrap().split_whitespace() {
-            let num_word: i32 = word.parse().unwrap();
-            if flag {heap1.push(num_word)} else {heap2.push(num_word)};
-            flag = false;
-        }
+    let mut flag = true;
+    for word in input.split_whitespace() {
+        let num_word: i32 = word.parse().unwrap();
+        if flag {vec1.push(num_word)} else {vec2.push(num_word)};
+        flag = !flag;
     }
 
-    let mut total: i32 = 0;
-    while !heap1.is_empty() {
-        if let (Some(max1), Some(max2)) = (heap1.pop(), heap2.pop()) {
-            total += (max1 - max2).abs();
-        }
-    }
+    vec1.sort();
+    vec2.sort();
+    let distance: i32 = vec1
+        .iter()
+        .zip(vec2)
+        .map(|(max1, max2)| (max1 - max2).abs())
+        .sum();
 
-    println!("{}", total);
+    println!("{}", distance);
 }
