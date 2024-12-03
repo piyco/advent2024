@@ -15,6 +15,7 @@ fn main() {
         flag = !flag;
     }
 
+
     let distance: i32 = vec
         .iter()
         .map(|k| k*map.get(k).unwrap_or(&0))
